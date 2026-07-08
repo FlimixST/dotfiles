@@ -13,16 +13,6 @@ import Quickshell.Hyprland
 
 Scope { // Scope
     id: root
-    property var tabButtonList: [
-        {
-            "icon": "keyboard",
-            "name": Translation.tr("Keybinds")
-        },
-        {
-            "icon": "experiment",
-            "name": Translation.tr("Elements")
-        },
-    ]
 
     Loader {
         id: cheatsheetLoader
@@ -46,8 +36,6 @@ Scope { // Scope
             implicitWidth: cheatsheetBackground.width + Appearance.sizes.elevationMargin * 2
             implicitHeight: cheatsheetBackground.height + Appearance.sizes.elevationMargin * 2
             WlrLayershell.namespace: "quickshell:cheatsheet"
-            // Setting this value makes it take its sweet time to open
-            // WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             color: "transparent"
 
             mask: Region {
@@ -86,24 +74,21 @@ Scope { // Scope
                     if (event.key === Qt.Key_Escape) {
                         cheatsheetRoot.hide();
                     }
-                    if (event.modifiers === Qt.ControlModifier) {
-                        if (event.key === Qt.Key_PageDown) {
-                            tabBar.incrementCurrentIndex();
-                            event.accepted = true;
-                        } else if (event.key === Qt.Key_PageUp) {
-                            tabBar.decrementCurrentIndex();
-                            event.accepted = true;
-                        } else if (event.key === Qt.Key_Tab) {
-                            tabBar.setCurrentIndex((tabBar.currentIndex + 1) % root.tabButtonList.length);
-                            event.accepted = true;
-                        } else if (event.key === Qt.Key_Backtab) {
-                            tabBar.setCurrentIndex((tabBar.currentIndex - 1 + root.tabButtonList.length) % root.tabButtonList.length);
-                            event.accepted = true;
-                        }
+                }
+
+                ColumnLayout { // Real content
+                    id: cheatsheetColumnLayout
+                    anchors.centerIn: parent
+                    spacing: 10
+
+                    CheatsheetKeybinds {
+                        Layout.topMargin: 5
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
                     }
                 }
 
-                RippleButton { // Close button
+                RippleButton { // Close button (defined after layout to receive clicks first)
                     id: closeButton
                     focus: cheatsheetRoot.visible
                     implicitWidth: 40
@@ -125,53 +110,6 @@ Scope { // Scope
                         horizontalAlignment: Text.AlignHCenter
                         font.pixelSize: Appearance.font.pixelSize.title
                         text: "close"
-                    }
-                }
-
-                ColumnLayout { // Real content
-                    id: cheatsheetColumnLayout
-                    anchors.centerIn: parent
-                    spacing: 10
-
-                    Toolbar {
-                        Layout.alignment: Qt.AlignHCenter
-                        enableShadow: false
-                        ToolbarTabBar {
-                            id: tabBar
-                            tabButtonList: root.tabButtonList
-
-                            Synchronizer on currentIndex {
-                                property alias source: swipeView.currentIndex
-                            }
-                        }
-                    }
-
-                    SwipeView { // Content pages
-                        id: swipeView
-                        Layout.topMargin: 5
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        spacing: 10
-                        currentIndex: Persistent.states.cheatsheet.tabIndex
-                        onCurrentIndexChanged: {
-                            Persistent.states.cheatsheet.tabIndex = currentIndex;
-                        }
-
-                        implicitWidth: Math.max.apply(null, contentChildren.map(child => child.implicitWidth || 0))
-                        implicitHeight: Math.max.apply(null, contentChildren.map(child => child.implicitHeight || 0))
-
-                        clip: true
-                        layer.enabled: true
-                        layer.effect: OpacityMask {
-                            maskSource: Rectangle {
-                                width: swipeView.width
-                                height: swipeView.height
-                                radius: Appearance.rounding.small
-                            }
-                        }
-
-                        CheatsheetKeybinds {}
-                        CheatsheetPeriodicTable {}
                     }
                 }
             }

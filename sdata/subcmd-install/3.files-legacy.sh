@@ -15,7 +15,7 @@ case "${SKIP_MISCCONF}" in
       elif [ -f "dots/.config/$i" ];then install_file "dots/.config/$i" "$XDG_CONFIG_HOME/$i"
       fi
     done
-    install_dir "dots/.local/share/konsole" "${XDG_DATA_HOME}"/konsole
+
     ;;
 esac
 
@@ -37,10 +37,7 @@ esac
 case "${SKIP_FONTCONFIG}" in
   true) true;;
   *)
-    case "$FONTSET_DIR_NAME" in
-      "") install_dir__sync dots/.config/fontconfig "$XDG_CONFIG_HOME"/fontconfig ;;
-      *) install_dir__sync dots-extra/fontsets/$FONTSET_DIR_NAME "$XDG_CONFIG_HOME"/fontconfig ;;
-    esac;;
+    install_dir__sync dots/.config/fontconfig "$XDG_CONFIG_HOME"/fontconfig;;
 esac
 
 # For Hyprland
@@ -52,26 +49,12 @@ case "${SKIP_HYPRLAND}" in
       mv "${XDG_CONFIG_HOME}/hypr/hyprland.conf" "${XDG_CONFIG_HOME}/hypr/hyprland.conf.old" # disable old config
       echo 'hyprland.conf has been renamed to hyprland.conf.old. This is to allow the new lua config to load.'
     fi
-    for i in hyprlock.conf ; do
-      install_file__auto_backup "dots/.config/hypr/$i" "${XDG_CONFIG_HOME}/hypr/$i"
-    done
     for i in hyprland.lua ; do
       case "${SKIP_HYPRLAND_ENTRY}" in
         true) true;;
         *) install_file "dots/.config/hypr/$i" "${XDG_CONFIG_HOME}/hypr/$i" ;;
       esac
     done
-    for i in hypridle.conf ; do
-      if [[ "${INSTALL_VIA_NIX}" == true ]]; then
-        install_file__auto_backup "dots-extra/via-nix/$i" "${XDG_CONFIG_HOME}/hypr/$i"
-      else
-        install_file__auto_backup "dots/.config/hypr/$i" "${XDG_CONFIG_HOME}/hypr/$i"
-      fi
-    done
-    if [ "$OS_GROUP_ID" = "fedora" ];then
-      v bash -c "printf \"# For fedora to setup polkit\nexec-once = /usr/libexec/kf6/polkit-kde-authentication-agent-1\n\" >> ${XDG_CONFIG_HOME}/hypr/hyprland/execs.conf"
-    fi
-
     install_dir__ignore_existing "dots/.config/hypr/custom" "${XDG_CONFIG_HOME}/hypr/custom"
     ;;
 esac

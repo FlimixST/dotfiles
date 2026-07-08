@@ -42,12 +42,6 @@ Variants {
         // Wallpaper
         property bool wallpaperIsVideo: Config.options.background.wallpaperPath.endsWith(".mp4") || Config.options.background.wallpaperPath.endsWith(".webm") || Config.options.background.wallpaperPath.endsWith(".mkv") || Config.options.background.wallpaperPath.endsWith(".avi") || Config.options.background.wallpaperPath.endsWith(".mov")
         property string wallpaperPath: wallpaperIsVideo ? Config.options.background.thumbnailPath : Config.options.background.wallpaperPath
-        property bool wallpaperSafetyTriggered: {
-            const enabled = Config.options.workSafety.enable.wallpaper;
-            const sensitiveWallpaper = (CF.StringUtils.stringListContainsSubstring(wallpaperPath.toLowerCase(), Config.options.workSafety.triggerCondition.fileKeywords));
-            const sensitiveNetwork = (CF.StringUtils.stringListContainsSubstring(Network.networkName.toLowerCase(), Config.options.workSafety.triggerCondition.networkNameKeywords));
-            return enabled && sensitiveWallpaper && sensitiveNetwork;
-        }
         readonly property real parallaxRation: Config.options.background.parallax.workspaceZoom
         property real minSuitableScale: 1 // Some reasonable init, to be updated
         property real effectiveWallpaperScale: minSuitableScale * parallaxRation
@@ -59,14 +53,9 @@ Variants {
         property real parallaxTotalPixelsY: Math.max(0, scaledWallpaperHeight - screen.height)
         readonly property bool verticalParallax: (Config.options.background.parallax.autoVertical && wallpaperHeight > wallpaperWidth) || Config.options.background.parallax.vertical
         // Colors
-        property bool shouldBlur: (GlobalStates.screenLocked && Config.options.lock.blur.enable)
         property color dominantColor: Appearance.colors.colPrimary // Default, to be changed
         property bool dominantColorIsDark: dominantColor.hslLightness < 0.5
-        property color colText: {
-            if (wallpaperSafetyTriggered)
-                return CF.ColorUtils.mix(Appearance.colors.colOnLayer0, Appearance.colors.colPrimary, 0.75);
-            return (GlobalStates.screenLocked && shouldBlur) ? Appearance.colors.colOnLayer0 : CF.ColorUtils.colorWithLightness(Appearance.colors.colPrimary, (dominantColorIsDark ? 0.8 : 0.12));
-        }
+        property color colText: CF.ColorUtils.colorWithLightness(Appearance.colors.colPrimary, (dominantColorIsDark ? 0.8 : 0.12));
         Behavior on colText {
             animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
         }
@@ -74,7 +63,7 @@ Variants {
         // Layer props
         screen: modelData
         exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.layer: (GlobalStates.screenLocked && !scaleAnim.running) ? WlrLayer.Overlay : WlrLayer.Bottom
+        WlrLayershell.layer: WlrLayer.Bottom
         // WlrLayershell.layer: WlrLayer.Bottom
         WlrLayershell.namespace: "quickshell:background"
         anchors {
@@ -83,11 +72,7 @@ Variants {
             left: true
             right: true
         }
-        color: {
-            if (!bgRoot.wallpaperSafetyTriggered || bgRoot.wallpaperIsVideo)
-                return "transparent";
-            return CF.ColorUtils.mix(Appearance.colors.colLayer0, Appearance.colors.colPrimary, 0.75);
-        }
+        color: "transparent"
         Behavior on color {
             animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
         }
@@ -153,7 +138,7 @@ Variants {
                     }
                     if (Config.options.background.parallax.enableSidebar) {
                         let sidebarFraction = bgRoot.parallaxRation / bgRoot.workspaceChunkSize / 2;
-                        usedFraction += (sidebarFraction * GlobalStates.sidebarRightOpen - sidebarFraction * GlobalStates.sidebarLeftOpen);
+                        usedFraction += (sidebarFraction * GlobalStates.sidebarRightOpen);
                     }
                     return Math.max(0, Math.min(1, usedFraction));
                 }
@@ -180,7 +165,7 @@ Variants {
                     return - bgRoot.parallaxTotalPixelsY * usedFractionY;
                 }
 
-                source: bgRoot.wallpaperSafetyTriggered ? "" : bgRoot.wallpaperPath
+                source: bgRoot.wallpaperPath
                 fillMode: Image.PreserveAspectCrop
                 Behavior on x {
                     NumberAnimation {
@@ -200,28 +185,7 @@ Variants {
 
             Loader {
                 id: blurLoader
-                active: Config.options.lock.blur.enable && (GlobalStates.screenLocked || scaleAnim.running)
-                anchors.fill: wallpaper
-                scale: GlobalStates.screenLocked ? Config.options.lock.blur.extraZoom : 1
-                Behavior on scale {
-                    NumberAnimation {
-                        id: scaleAnim
-                        duration: 400
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.animationCurves.expressiveDefaultSpatial
-                    }
-                }
-                sourceComponent: GaussianBlur {
-                    source: wallpaper
-                    radius: GlobalStates.screenLocked ? Config.options.lock.blur.radius : 0
-                    samples: radius * 2 + 1
-
-                    Rectangle {
-                        opacity: GlobalStates.screenLocked ? 1 : 0
-                        anchors.fill: parent
-                        color: CF.ColorUtils.transparentize(Appearance.colors.colLayer0, 0.7)
-                    }
-                }
+                active: false
             }
 
             WidgetCanvas {
@@ -273,7 +237,6 @@ Variants {
                         scaledScreenWidth: bgRoot.screen.width
                         scaledScreenHeight: bgRoot.screen.height
                         wallpaperScale: 1
-                        wallpaperSafetyTriggered: bgRoot.wallpaperSafetyTriggered
                     }
                 }
             }

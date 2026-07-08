@@ -7,6 +7,5 @@ arch=(any)
 license=(None)
 depends=(
   hyprland
-  hyprsunset
   wl-clipboard
 )

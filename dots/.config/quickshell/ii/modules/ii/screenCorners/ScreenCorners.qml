@@ -13,8 +13,8 @@ Scope {
     id: screenCorners
     readonly property Toplevel activeWindow: ToplevelManager.activeToplevel
     property var actionForCorner: ({
-        [RoundCorner.CornerEnum.TopLeft]: () => GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen,
-        [RoundCorner.CornerEnum.BottomLeft]: () => GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen,
+        [RoundCorner.CornerEnum.TopLeft]: () => {},
+        [RoundCorner.CornerEnum.BottomLeft]: () => {},
         [RoundCorner.CornerEnum.TopRight]: () => GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen,
         [RoundCorner.CornerEnum.BottomRight]: () => GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen
     })
@@ -28,7 +28,7 @@ Scope {
 
         exclusionMode: ExclusionMode.Ignore
         mask: Region {
-            item: sidebarCornerOpenInteractionLoader.active ? sidebarCornerOpenInteractionLoader : null
+            item: sidebarInteractionLoader.active ? sidebarInteractionLoader : null
         }
         WlrLayershell.namespace: "quickshell:screenCorners"
         WlrLayershell.layer: WlrLayer.Overlay
@@ -56,16 +56,12 @@ Scope {
             bottomVisualMargin: (Config.options.interactions.deadPixelWorkaround.enable && cornerPanelWindow.anchors.bottom) * 1
 
             implicitSize: Appearance.rounding.screenRounding
-            implicitHeight: Math.max(implicitSize, sidebarCornerOpenInteractionLoader.implicitHeight)
-            implicitWidth: Math.max(implicitSize, sidebarCornerOpenInteractionLoader.implicitWidth)
+            implicitHeight: Math.max(implicitSize, sidebarInteractionLoader.implicitHeight)
+            implicitWidth: Math.max(implicitSize, sidebarInteractionLoader.implicitWidth)
 
             Loader {
-                id: sidebarCornerOpenInteractionLoader
-                active: {
-                    if (!Config.options.sidebar.cornerOpen.enable) return false;
-                    if (cornerPanelWindow.fullscreen) return false;
-                    return (Config.options.sidebar.cornerOpen.bottom == cornerWidget.isBottom);
-                }
+                id: sidebarInteractionLoader
+                active: Config.options.sidebar.cornerOpen.enable && !cornerPanelWindow.fullscreen && (Config.options.sidebar.cornerOpen.bottom == cornerWidget.isBottom)
                 anchors {
                     top: (cornerWidget.isTopLeft || cornerWidget.isTopRight) ? parent.top : undefined
                     bottom: (cornerWidget.isBottomLeft || cornerWidget.isBottomRight) ? parent.bottom : undefined
@@ -77,59 +73,30 @@ Scope {
                     id: mouseArea
                     implicitWidth: Config.options.sidebar.cornerOpen.cornerRegionWidth
                     implicitHeight: Config.options.sidebar.cornerOpen.cornerRegionHeight
-                    hoverEnabled: true
-                    onPositionChanged: {
-                        if (!Config.options.sidebar.cornerOpen.clicklessCornerEnd) return;
-                        const verticalOffset = Config.options.sidebar.cornerOpen.clicklessCornerVerticalOffset;
-                        const correctX = (cornerWidget.isRight && mouseArea.mouseX >= mouseArea.width - 2) || (cornerWidget.isLeft && mouseArea.mouseX <= 2);
-                        const correctY = (cornerWidget.isTop && mouseArea.mouseY > verticalOffset || cornerWidget.isBottom && mouseArea.mouseY < mouseArea.height - verticalOffset);
-                        if (correctX && correctY)
-                            screenCorners.actionForCorner[cornerPanelWindow.corner]();
-                    }
-                    onEntered: {
-                        if (Config.options.sidebar.cornerOpen.clickless)
-                            screenCorners.actionForCorner[cornerPanelWindow.corner]();
-                    }
+
                     onPressed: {
                         screenCorners.actionForCorner[cornerPanelWindow.corner]();
                     }
                     onScrollDown: {
-                        if (!Config.options.sidebar.cornerOpen.valueScroll)
-                            return;
+                        if (!Config.options.sidebar.cornerOpen.valueScroll) return;
                         if (cornerWidget.isLeft)
                             Brightness.decreaseBrightness()
-                        else {
-                            const currentVolume = Audio.value;
-                            const step = currentVolume < 0.1 ? 0.01 : 0.02 || 0.2;
-                            Audio.sink.audio.volume -= step;
-                        }
+                        else
+                            Audio.sink.audio.volume = Math.max(0, Audio.sink.audio.volume - 0.02);
                     }
                     onScrollUp: {
-                        if (!Config.options.sidebar.cornerOpen.valueScroll)
-                            return;
+                        if (!Config.options.sidebar.cornerOpen.valueScroll) return;
                         if (cornerWidget.isLeft)
                             Brightness.increaseBrightness()
-                        else {
-                            const currentVolume = Audio.value;
-                            const step = currentVolume < 0.1 ? 0.01 : 0.02 || 0.2;
-                            Audio.sink.audio.volume = Math.min(1, Audio.sink.audio.volume + step);
-                        }
+                        else
+                            Audio.sink.audio.volume = Math.min(1, Audio.sink.audio.volume + 0.02);
                     }
                     onMovedAway: {
-                        if (!Config.options.sidebar.cornerOpen.valueScroll)
-                            return;
+                        if (!Config.options.sidebar.cornerOpen.valueScroll) return;
                         if (cornerWidget.isLeft)
                             GlobalStates.osdBrightnessOpen = false;
                         else
                             GlobalStates.osdVolumeOpen = false;
-                    }
-
-                    Loader {
-                        active: Config.options.sidebar.cornerOpen.visualize
-                        anchors.fill: parent
-                        sourceComponent: Rectangle {
-                            color: Appearance.colors.colPrimary
-                        }
                     }
                 }
             }
@@ -144,7 +111,6 @@ Scope {
             required property var modelData
             property HyprlandMonitor monitor: Hyprland.monitorFor(modelData)
 
-            // Hide when fullscreen
             property list<HyprlandWorkspace> workspacesForMonitor: Hyprland.workspaces.values.filter(workspace => workspace.monitor && workspace.monitor.name == monitor.name)
             property var activeWorkspaceWithFullscreen: workspacesForMonitor.filter(workspace => ((workspace.toplevels.values.filter(window => window.wayland?.fullscreen)[0] != undefined) && workspace.active))[0]
             property bool fullscreen: activeWorkspaceWithFullscreen != undefined

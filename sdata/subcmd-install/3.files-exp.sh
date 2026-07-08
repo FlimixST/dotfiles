@@ -29,7 +29,7 @@ wizard_update_preferences() {
 
     # Get current preferences
     current_shell=$(yq '.user_preferences.shell // "fish"' "$CONFIG_FILE")
-    current_terminal=$(yq '.user_preferences.terminal // "kitty"' "$CONFIG_FILE")
+    current_terminal=$(yq '.user_preferences.terminal // "ghostty"' "$CONFIG_FILE")
     current_keybindings=$(yq '.user_preferences.keybindings // "default"' "$CONFIG_FILE")
 
     echo "Current preferences:"
@@ -53,14 +53,14 @@ wizard_update_preferences() {
     # Terminal selection
     echo
     echo "Which terminal do you prefer?"
-    echo "1) kitty (default)"
+    echo "1) ghostty (default)"
     echo "2) foot"
     read -p "Enter choice [1-2]: " terminal_choice
 
     case "$terminal_choice" in
-      1|"") terminal="kitty" ;;
+      1|"") terminal="ghostty" ;;
       2) terminal="foot" ;;
-      *) echo "Invalid choice, using kitty"; terminal="kitty" ;;
+      *) echo "Invalid choice, using ghostty"; terminal="ghostty" ;;
     esac
 
     # Keybindings selection

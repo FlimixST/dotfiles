@@ -142,7 +142,7 @@ Item { // Wrapper
                 property real verticalPadding: 4
                 Layout.fillWidth: true
                 Layout.leftMargin: 10
-                Layout.rightMargin: 4
+                Layout.rightMargin: 10
                 Layout.topMargin: verticalPadding
                 Layout.bottomMargin: verticalPadding
                 Synchronizer on searchingText {

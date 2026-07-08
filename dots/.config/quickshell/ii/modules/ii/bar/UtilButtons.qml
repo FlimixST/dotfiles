@@ -36,21 +36,6 @@ Item {
             }
         }
 
-        Loader {
-            active: Config.options.bar.utilButtons.showScreenRecord
-            visible: Config.options.bar.utilButtons.showScreenRecord
-            sourceComponent: CircleUtilButton {
-                Layout.alignment: Qt.AlignVCenter
-                onClicked: Quickshell.execDetached([Directories.recordScriptPath])
-                MaterialSymbol {
-                    horizontalAlignment: Qt.AlignHCenter
-                    fill: 1
-                    text: "videocam"
-                    iconSize: Appearance.font.pixelSize.large
-                    color: Appearance.colors.colOnLayer2
-                }
-            }
-        }
 
         Loader {
             active: Config.options.bar.utilButtons.showColorPicker

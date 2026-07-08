@@ -143,7 +143,7 @@ Column {
         const decategorized = description.replace(regex, "");
         if (!containsFirstRepetitive(bind)) return decategorized;
         const denumbered = decategorized.replace("1", "<Number>");
-        const dedirectioned = denumbered.replace(/ \b(left|right|up|down)\b/i, " <Direction>");
+        const dedirectioned = decategorized.replace(/ \b(left|right|up|down)\b/i, " <Direction>");
         return dedirectioned;
     }
 

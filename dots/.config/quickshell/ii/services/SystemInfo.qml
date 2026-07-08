@@ -59,24 +59,9 @@ Singleton {
             // Update the distroIcon property based on distroId
             switch (distroId) {
                 case "artix":
-                case "arch": distroIcon = "arch-symbolic"; break;
-                case "endeavouros": distroIcon = "endeavouros-symbolic"; break;
-                case "cachyos": distroIcon = "cachyos-symbolic"; break;
-                case "nixos": distroIcon = "nixos-symbolic"; break;
-                case "fedora": distroIcon = "fedora-symbolic"; break;
-                case "linuxmint":
-                case "ubuntu":
-                case "zorin":
-                case "popos": distroIcon = "ubuntu-symbolic"; break;
-                case "debian":
-                case "raspbian":
-                case "kali": distroIcon = "debian-symbolic"; break;
-                case "funtoo":
-                case "gentoo": distroIcon = "gentoo-symbolic"; break;
+                case "arch":
+                case "cachyos": distroIcon = "arch-symbolic"; break;
                 default: distroIcon = "linux-symbolic"; break;
-            }
-            if (textOsRelease.toLowerCase().includes("nyarch")) {
-                distroIcon = "nyarch-symbolic"
             }
 
             if (logo.trim().length === 0) {

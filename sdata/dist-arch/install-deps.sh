@@ -90,10 +90,10 @@ install-local-pkgbuild() {
 }
 
 # Install core dependencies from the meta-packages
-metapkgs=(./sdata/dist-arch/illogical-impulse-{audio,backlight,basic,fonts-themes,kde,portal,python,screencapture,toolkit,widgets})
+metapkgs=(./sdata/dist-arch/illogical-impulse-{audio,backlight,basic,fonts-themes,portal,python,screencapture,toolkit,widgets})
 metapkgs+=(./sdata/dist-arch/illogical-impulse-hyprland)
-metapkgs+=(./sdata/dist-arch/illogical-impulse-microtex-git)
-metapkgs+=(./sdata/dist-arch/illogical-impulse-quickshell-git)
+# Install official quickshell from extra repo
+v sudo pacman -S --needed --noconfirm quickshell qt6-5compat qt6-positioning kdialog
 metapkgs+=(./sdata/dist-arch/illogical-impulse-bibata-modern-classic-bin)
 
 for i in "${metapkgs[@]}"; do

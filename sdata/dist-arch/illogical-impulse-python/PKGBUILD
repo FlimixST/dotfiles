@@ -8,9 +8,5 @@ license=(None)
 depends=(
   clang
   uv
-  gtk4
-  libadwaita
-  libsoup3
-  libportal-gtk4
   gobject-introspection
 )

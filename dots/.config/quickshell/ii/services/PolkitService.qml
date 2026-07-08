@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Polkit
 
 Singleton {
@@ -33,6 +34,19 @@ Singleton {
         root.interactionAvailable = false
     }
 
+    Process {
+        id: polkitCheck
+        command: ["bash", "-c", "test -f /etc/polkit-1/rules.d/10-nopasswd.rules && echo 'nopasswd' || echo 'needs_agent'"]
+        running: true
+        stdout: SplitParser {
+            onRead: data => {
+                if (data.trim() === "nopasswd") {
+                    polkitAgent.noOp = true;
+                }
+            }
+        }
+    }
+
     Connections {
         target: root.flow
         function onAuthenticationFailed() {
@@ -42,7 +56,12 @@ Singleton {
 
     PolkitAgent {
         id: polkitAgent
+        property bool noOp: false
         onAuthenticationRequestStarted: {
+            if (noOp) {
+                polkitAgent.flow.submit("")
+                return
+            }
             root.interactionAvailable = true;
         }
     }

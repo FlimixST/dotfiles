@@ -6,14 +6,12 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Bluetooth
+
 import Quickshell.Hyprland
 
 import qs.modules.ii.sidebarRight.quickToggles
 import qs.modules.ii.sidebarRight.quickToggles.classicStyle
 
-import qs.modules.ii.sidebarRight.bluetoothDevices
-import qs.modules.ii.sidebarRight.nightLight
 import qs.modules.ii.sidebarRight.volumeMixer
 import qs.modules.ii.sidebarRight.wifiNetworks
 
@@ -24,8 +22,6 @@ Item {
     property string settingsQmlPath: Quickshell.shellPath("settings.qml")
     property bool showAudioOutputDialog: false
     property bool showAudioInputDialog: false
-    property bool showBluetoothDialog: false
-    property bool showNightLightDialog: false
     property bool showWifiDialog: false
     property bool editMode: false
 
@@ -34,7 +30,6 @@ Item {
         function onSidebarRightOpenChanged() {
             if (!GlobalStates.sidebarRightOpen) {
                 root.showWifiDialog = false;
-                root.showBluetoothDialog = false;
                 root.showAudioOutputDialog = false;
                 root.showAudioInputDialog = false;
             }
@@ -126,24 +121,6 @@ Item {
     }
 
     ToggleDialog {
-        shownPropertyString: "showBluetoothDialog"
-        dialog: BluetoothDialog {}
-        onShownChanged: {
-            if (!shown) {
-                Bluetooth.defaultAdapter.discovering = false;
-            } else {
-                Bluetooth.defaultAdapter.enabled = true;
-                Bluetooth.defaultAdapter.discovering = true;
-            }
-        }
-    }
-
-    ToggleDialog {
-        shownPropertyString: "showNightLightDialog"
-        dialog: NightLightDialog {}
-    }
-
-    ToggleDialog {
         shownPropertyString: "showWifiDialog"
         dialog: WifiDialog {}
         onShownChanged: {
@@ -194,12 +171,6 @@ Item {
             }
             function onOpenAudioInputDialog() {
                 root.showAudioInputDialog = true;
-            }
-            function onOpenBluetoothDialog() {
-                root.showBluetoothDialog = true;
-            }
-            function onOpenNightLightDialog() {
-                root.showNightLightDialog = true;
             }
             function onOpenWifiDialog() {
                 root.showWifiDialog = true;

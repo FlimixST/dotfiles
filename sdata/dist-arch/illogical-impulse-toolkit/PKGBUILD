@@ -6,7 +6,6 @@ pkgdesc='Illogical Impulse Toolkit Dependencies'
 arch=(any)
 license=(None)
 depends=(
-  upower
   wtype
   ydotool
 )

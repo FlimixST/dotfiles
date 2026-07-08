@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Bluetooth
 import Quickshell.Services.UPower
 import qs
 import qs.services
@@ -57,21 +56,11 @@ Item { // Bar content region
         onScrollDown: Brightness.decreaseBrightness()
         onScrollUp: Brightness.increaseBrightness()
         onMovedAway: GlobalStates.osdBrightnessOpen = false
-        onPressed: event => {
-            if (event.button === Qt.LeftButton)
-                GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen;
-        }
 
         ColumnLayout { // Content
             id: topSectionColumnLayout
             anchors.fill: parent
             spacing: 10
-
-            Bar.LeftSidebarButton { // Left sidebar button
-                Layout.alignment: Qt.AlignHCenter
-                Layout.topMargin: (Appearance.sizes.baseVerticalBarWidth - implicitWidth) / 2 + Appearance.sizes.hyprlandGapsOut
-                colBackground: barTopSectionMouseArea.hovered ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
-            }
 
             Item {
                 Layout.fillHeight: true
@@ -140,15 +129,6 @@ Item { // Bar content region
                 Layout.fillHeight: false
             }
 
-            HorizontalBarSeparator {
-                visible: Battery.available
-            }
-
-            BatteryIndicator {
-                visible: Battery.available
-                Layout.fillWidth: true
-                Layout.fillHeight: false
-            }
             
         }
     }
@@ -277,13 +257,7 @@ Item { // Bar content region
                         iconSize: Appearance.font.pixelSize.larger
                         color: rightSidebarButton.colText
                     }
-                    MaterialSymbol {
-                        Layout.topMargin: indicatorsColumnLayout.realSpacing
-                        visible: BluetoothStatus.available
-                        text: BluetoothStatus.connected ? "bluetooth_connected" : BluetoothStatus.enabled ? "bluetooth" : "bluetooth_disabled"
-                        iconSize: Appearance.font.pixelSize.larger
-                        color: rightSidebarButton.colText
-                    }
+
                 }
             }
         }

@@ -1,4 +1,6 @@
 # Commands to run in interactive sessions can go here
+set -g fish_prompt_pwd_dir_length 0
+
 if status is-interactive
     # No greeting
     set fish_greeting
@@ -16,6 +18,7 @@ if status is-interactive
     if test -f ~/.local/state/quickshell/user/generated/terminal/sequences.txt
         cat ~/.local/state/quickshell/user/generated/terminal/sequences.txt
     end
+
 
     # Aliases
     # kitty doesn't clear properly so we need to do this weird printing

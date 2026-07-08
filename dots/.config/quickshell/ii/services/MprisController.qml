@@ -1,9 +1,6 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
 
-// From https://git.outfoxxed.me/outfoxxed/nixnew
-// It does not have a license, but the author is okay with redistribution.
-
 import QtQml.Models
 import QtQuick
 import Quickshell
@@ -25,19 +22,12 @@ Singleton {
 
 	property var activeTrack;
 
-	readonly property bool hasActivePlasmaIntegration: Mpris.players.values.some(
-		p => p.dbusName?.startsWith('org.mpris.MediaPlayer2.plasma-browser-integration')
-	)
 	function isRealPlayer(player) {
         if (!Config.options.media.filterDuplicatePlayers) {
             return true;
         }
         return (
-            // Remove native browser buses only if plasma-browser-integration is actually active on D-Bus
-            !(hasActivePlasmaIntegration && player.dbusName.startsWith('org.mpris.MediaPlayer2.firefox')) && !(hasActivePlasmaIntegration && player.dbusName.startsWith('org.mpris.MediaPlayer2.chromium')) &&
-            // playerctld just copies other buses and we don't need duplicates
             !player.dbusName?.startsWith('org.mpris.MediaPlayer2.playerctld') &&
-            // Non-instance mpd bus
             !(player.dbusName?.endsWith('.mpd') && !player.dbusName.endsWith('MediaPlayer2.mpd')));
     }
 

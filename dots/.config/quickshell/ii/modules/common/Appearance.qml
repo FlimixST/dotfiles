@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import qs.modules.common.functions
 pragma Singleton
 pragma ComponentBehavior: Bound
@@ -196,6 +197,45 @@ Singleton {
         property color colErrorContainerHover: ColorUtils.mix(m3colors.m3errorContainer, m3colors.m3onErrorContainer, 0.90)
         property color colErrorContainerActive: ColorUtils.mix(m3colors.m3errorContainer, m3colors.m3onErrorContainer, 0.70)
         property color colOnErrorContainer: m3colors.m3onErrorContainer
+    }
+
+    property bool anyFullscreen: false
+
+    function updateFullscreen() {
+        var ws = Hyprland.workspaces;
+        for (var i = 0; i < ws.length; i++) {
+            var toplevels = ws[i].toplevels.values;
+            for (var j = 0; j < toplevels.length; j++) {
+                if (toplevels[j].wayland?.fullscreen) {
+                    anyFullscreen = true;
+                    return;
+                }
+            }
+        }
+        anyFullscreen = false;
+    }
+
+    Connections {
+        target: Hyprland
+        function onWorkspacesChanged() { root.updateFullscreen(); }
+        function onActiveWorkspaceChanged() { root.updateFullscreen(); }
+    }
+
+    Timer {
+        interval: 500
+        repeat: true
+        running: Config.options.appearance.fakeScreenRounding === 2
+        onTriggered: root.updateFullscreen()
+    }
+
+    Binding {
+        target: root.rounding
+        property: "screenRounding"
+        value: {
+            if (Config.options.appearance.fakeScreenRounding === 0) return 0;
+            if (Config.options.appearance.fakeScreenRounding === 2 && root.anyFullscreen) return 0;
+            return root.rounding.large;
+        }
     }
 
     rounding: QtObject {

@@ -60,6 +60,11 @@ ApplicationWindow {
             component: "modules/settings/AdvancedConfig.qml"
         },
         {
+            name: Translation.tr("Game Mode"),
+            icon: "sports_esports",
+            component: "modules/settings/GameConfig.qml"
+        },
+        {
             name: Translation.tr("About"),
             icon: "info",
             component: "modules/settings/About.qml"

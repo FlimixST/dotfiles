@@ -72,8 +72,6 @@ Tips:
   - Widely used.
 - `fontconfig`
   - Basic component which is nearly a must.
-- `kitty`
-  - Used in fuzzel, Hyprland, kdeglobals and Quickshell config; kitty config is also included as dots.
 - `matugen-bin`
   - Used in Quickshell.
 - `otf-space-grotesk`
@@ -83,7 +81,7 @@ Tips:
   - Used in Fish config.
 - `ttf-jetbrains-mono-nerd`
   - Font name: `JetBrains Mono NF`, `JetBrainsMono Nerd Font`.
-  - Used in foot, kdeglobals, kitty, qt5ct, qt6ct and Quickshell config.
+  - Used in foot, kdeglobals, qt5ct, qt6ct and Quickshell config.
 - `ttf-material-symbols-variable-git`
   - Font name: `Material Symbols Rounded`, `Material Symbols Outlined`
   - Used in Hyprland, matugen, Quickshell and wlogout config.
@@ -136,30 +134,20 @@ Tips:
   - Some python package may need this to be built, e.g. #1235. This may varies on different distros though.
 - `uv`
   - Used for python venv.
-- `gtk4`
-  - Not explicitly used.
-- `libadwaita`
-  - Not explicitly used.
-- `libsoup3`
-  - Not explicitly used.
-- `libportal-gtk4`
-  - Not explicitly used.
 - `gobject-introspection`
-  - Not explicitly used.
+  - Needed by `thumbgen.py` (`from gi.repository import Gio`).
 
 ## illogical-impulse-screencapture
 - `hyprshot`
   - Used in Hyprland `keybinds.conf` as fallback.
 - `slurp`
   - Used in Hyprland and Quickshell config.
-- `swappy`
+- `satty`
   - Used in Quickshell config.
 - `tesseract`
   - Used in Quickshell and Hyprland config.
 - `tesseract-data-eng`
   - Used as data for tesseract.
-- `wf-recorder`
-  - Used in Quickshell config.
 
 
 ## illogical-impulse-toolkit
@@ -197,33 +185,12 @@ Tips:
 
 
 # Actual packages
-## illogical-impulse-quickshell-git
-- Pinned commit.
-- Also with extra dependencies (mainly Qt things) needed by the illogical-impulse Quickshell config.
-
-Extra dependencies.
-- `qt6-base`
-- `qt6-declarative`
-- `qt6-5compat`
-- `qt6-avif-image-plugin`
-- `qt6-imageformats`
-- `qt6-multimedia`
-- `qt6-positioning`
-- `qt6-quicktimeline`
-- `qt6-sensors`
-- `qt6-svg`
-- `qt6-tools`
-- `qt6-translations`
-- `qt6-virtualkeyboard`
-- `qt6-wayland`
-- `kirigami`
-- `kdialog`
-- `syntax-highlighting`
-- `vulkan-headers`
-- `libdrm`
-- `cpptrace`
-- `jemalloc`
-- `mesa`
+## quickshell
+- Install from `extra`: `sudo pacman -S quickshell`
+- Plus extra deps needed by illogical-impulse config:
+  - `qt6-5compat` (Qt5Compat.GraphicalEffects)
+  - `qt6-positioning` (PositionSource in Weather.qml)
+  - `kdialog` (wallpaper picker in switchwall.sh)
 
 ## illogical-impulse-bibata-modern-classic-bin
 - [source](https://github.com/ful1e5/Bibata_Cursor)

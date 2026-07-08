@@ -6,7 +6,6 @@ pkgdesc='Illogical Impulse Backlight Dependencies'
 arch=(any)
 license=(None)
 depends=(
-  geoclue
   brightnessctl
   ddcutil
 )

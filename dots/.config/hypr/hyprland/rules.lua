@@ -40,7 +40,7 @@ hl.window_rule({match = {class = "^(nm-connection-editor)$" },               cen
 hl.window_rule({match = {class = ".*plasmawindowed.*" },                     float = true})
 hl.window_rule({match = {class = "kcm_.*" },                                  float = true})
 hl.window_rule({match = {class = ".*bluedevilwizard" },                      float = true})
-hl.window_rule({match = {title = ".*Welcome" },                              float = true})
+
 hl.window_rule({match = {title = "^(illogical-impulse Settings)$" },         float = true})
 hl.window_rule({match = {title = ".*Shell conflicts.*" },                    float = true})
 hl.window_rule({match = {class = "org.freedesktop.impl.portal.desktop.kde" }, float = true})
@@ -100,7 +100,7 @@ hl.layer_rule({ match = { namespace = "launcher" }, blur = true})
 hl.layer_rule({ match = { namespace = "launcher" }, ignore_alpha = 0.5})
 hl.layer_rule({ match = { namespace = "notifications" }, blur = true})
 hl.layer_rule({ match = { namespace = "notifications" }, ignore_alpha = 0.69})
-hl.layer_rule({ match = { namespace = "logout_dialog" }, blur = true}) -- wlogout
+
 
 -- ags
 hl.layer_rule({ match = { namespace = "sideleft.*" }, animation = "slide left"})

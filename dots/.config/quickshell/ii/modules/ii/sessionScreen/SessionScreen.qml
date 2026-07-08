@@ -18,10 +18,6 @@ Scope {
     Loader {
         id: sessionLoader
         active: GlobalStates.sessionOpen
-        onActiveChanged: {
-            if (sessionLoader.active)
-                SessionWarnings.refresh();
-        }
 
         Connections {
             target: GlobalStates
@@ -32,10 +28,9 @@ Scope {
             }
         }
 
-        sourceComponent: PanelWindow { // Session menu
+        sourceComponent: PanelWindow {
             id: sessionRoot
             visible: sessionLoader.active
-            property string subtitle
 
             function hide() {
                 GlobalStates.sessionOpen = false;
@@ -64,7 +59,7 @@ Scope {
                 }
             }
 
-            ColumnLayout { // Content column
+            ColumnLayout {
                 id: contentColumn
                 anchors.centerIn: parent
                 spacing: 15
@@ -79,7 +74,6 @@ Scope {
                     Layout.alignment: Qt.AlignHCenter
                     spacing: 0
                     StyledText {
-                        // Title
                         Layout.alignment: Qt.AlignHCenter
                         horizontalAlignment: Text.AlignHCenter
                         font {
@@ -91,7 +85,6 @@ Scope {
                     }
 
                     StyledText {
-                        // Small instruction
                         Layout.alignment: Qt.AlignHCenter
                         horizontalAlignment: Text.AlignHCenter
                         font.pixelSize: Appearance.font.pixelSize.normal
@@ -99,43 +92,9 @@ Scope {
                     }
                 }
 
-                GridLayout {
-                    columns: 4
-                    columnSpacing: 15
-                    rowSpacing: 15
+                RowLayout {
+                    spacing: 15
 
-                    SessionActionButton {
-                        id: sessionLock
-                        focus: sessionRoot.visible
-                        buttonIcon: "lock"
-                        buttonText: Translation.tr("Lock")
-                        onClicked: {
-                            Session.lock();
-                            sessionRoot.hide();
-                        }
-                        onFocusChanged: {
-                            if (focus)
-                                sessionRoot.subtitle = buttonText;
-                        }
-                        KeyNavigation.right: sessionSleep
-                        KeyNavigation.down: sessionHibernate
-                    }
-                    SessionActionButton {
-                        id: sessionSleep
-                        buttonIcon: "dark_mode"
-                        buttonText: Translation.tr("Sleep")
-                        onClicked: {
-                            Session.suspend();
-                            sessionRoot.hide();
-                        }
-                        onFocusChanged: {
-                            if (focus)
-                                sessionRoot.subtitle = buttonText;
-                        }
-                        KeyNavigation.left: sessionLock
-                        KeyNavigation.right: sessionLogout
-                        KeyNavigation.down: sessionShutdown
-                    }
                     SessionActionButton {
                         id: sessionLogout
                         buttonIcon: "logout"
@@ -144,44 +103,6 @@ Scope {
                             Session.logout();
                             sessionRoot.hide();
                         }
-                        onFocusChanged: {
-                            if (focus)
-                                sessionRoot.subtitle = buttonText;
-                        }
-                        KeyNavigation.left: sessionSleep
-                        KeyNavigation.right: sessionTaskManager
-                        KeyNavigation.down: sessionReboot
-                    }
-                    SessionActionButton {
-                        id: sessionTaskManager
-                        buttonIcon: "browse_activity"
-                        buttonText: Translation.tr("Task Manager")
-                        onClicked: {
-                            Session.launchTaskManager();
-                            sessionRoot.hide();
-                        }
-                        onFocusChanged: {
-                            if (focus)
-                                sessionRoot.subtitle = buttonText;
-                        }
-                        KeyNavigation.left: sessionLogout
-                        KeyNavigation.down: sessionFirmwareReboot
-                    }
-
-                    SessionActionButton {
-                        id: sessionHibernate
-                        buttonIcon: "downloading"
-                        buttonText: Translation.tr("Hibernate")
-                        onClicked: {
-                            Session.hibernate();
-                            sessionRoot.hide();
-                        }
-                        onFocusChanged: {
-                            if (focus)
-                                sessionRoot.subtitle = buttonText;
-                        }
-                        KeyNavigation.up: sessionLock
-                        KeyNavigation.right: sessionShutdown
                     }
                     SessionActionButton {
                         id: sessionShutdown
@@ -191,13 +112,6 @@ Scope {
                             Session.poweroff();
                             sessionRoot.hide();
                         }
-                        onFocusChanged: {
-                            if (focus)
-                                sessionRoot.subtitle = buttonText;
-                        }
-                        KeyNavigation.left: sessionHibernate
-                        KeyNavigation.right: sessionReboot
-                        KeyNavigation.up: sessionSleep
                     }
                     SessionActionButton {
                         id: sessionReboot
@@ -207,89 +121,18 @@ Scope {
                             Session.reboot();
                             sessionRoot.hide();
                         }
-                        onFocusChanged: {
-                            if (focus)
-                                sessionRoot.subtitle = buttonText;
-                        }
-                        KeyNavigation.left: sessionShutdown
-                        KeyNavigation.right: sessionFirmwareReboot
-                        KeyNavigation.up: sessionLogout
                     }
                     SessionActionButton {
                         id: sessionFirmwareReboot
                         buttonIcon: "settings_applications"
-                        buttonText: Translation.tr("Reboot to firmware settings")
+                        buttonText: Translation.tr("Reboot to firmware")
                         onClicked: {
                             Session.rebootToFirmware();
                             sessionRoot.hide();
                         }
-                        onFocusChanged: {
-                            if (focus)
-                                sessionRoot.subtitle = buttonText;
-                        }
-                        KeyNavigation.up: sessionTaskManager
-                        KeyNavigation.left: sessionReboot
-                    }
-                }
-
-                DescriptionLabel {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: sessionRoot.subtitle
-                }
-            }
-
-            ColumnLayout {
-                anchors {
-                    top: contentColumn.bottom
-                    topMargin: 10
-                    horizontalCenter: contentColumn.horizontalCenter
-                }
-                spacing: 10
-
-                Loader {
-                    Layout.alignment: Qt.AlignHCenter
-                    active: SessionWarnings.downloadRunning
-                    visible: active
-                    sourceComponent: DescriptionLabel {
-                        text: Translation.tr("There might be a download in progress. Check your Downloads folder.")
-                        textColor: Appearance.m3colors.m3onErrorContainer
-                        color: Appearance.m3colors.m3errorContainer
-                    }
-                }
-
-                Loader {
-                    Layout.alignment: Qt.AlignHCenter
-                    active: SessionWarnings.packageManagerRunning
-                    visible: active
-                    sourceComponent: DescriptionLabel {
-                        text: Translation.tr("Your package manager is running")
-                        textColor: Appearance.m3colors.m3onErrorContainer
-                        color: Appearance.m3colors.m3errorContainer
                     }
                 }
             }
-        }
-    }
-
-    component DescriptionLabel: Rectangle {
-        id: descriptionLabel
-        property string text
-        property color textColor: Appearance.colors.colOnTooltip
-        color: Appearance.colors.colTooltip
-        clip: true
-        radius: Appearance.rounding.normal
-        implicitHeight: descriptionLabelText.implicitHeight + 10 * 2
-        implicitWidth: descriptionLabelText.implicitWidth + 15 * 2
-
-        Behavior on implicitWidth {
-            animation: Appearance.animation.elementMove.numberAnimation.createObject(this)
-        }
-
-        StyledText {
-            id: descriptionLabelText
-            anchors.centerIn: parent
-            color: descriptionLabel.textColor
-            text: descriptionLabel.text
         }
     }
 

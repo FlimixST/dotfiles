@@ -1,3 +1,4 @@
+
 import qs.modules.ii.bar.weather
 import QtQuick
 import QtQuick.Layouts
@@ -62,35 +63,15 @@ Item { // Bar content region
         onScrollDown: Brightness.decreaseBrightness()
         onScrollUp: Brightness.increaseBrightness()
         onMovedAway: GlobalStates.osdBrightnessOpen = false
-        onPressed: event => {
-            if (event.button === Qt.LeftButton)
-                GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen;
-        }
 
         // Visual content
-        ScrollHint {
-            reveal: barLeftSideMouseArea.hovered
-            icon: Hyprsunset.gamma === 100 ? "light_mode" : "wb_twilight"
-            tooltipText: Translation.tr("Scroll to change brightness")
-            side: "left"
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-        }
-
         RowLayout {
             id: leftSectionRowLayout
             anchors.fill: parent
             spacing: 0
 
-            LeftSidebarButton { // Left sidebar button
-                id: leftSidebarButton
-                Layout.alignment: Qt.AlignVCenter
-                Layout.leftMargin: Appearance.rounding.screenRounding
-                colBackground: barLeftSideMouseArea.hovered ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
-            }
-
             ActiveWindow {
-                Layout.leftMargin: 10 + (leftSidebarButton.visible ? 0 : Appearance.rounding.screenRounding)
+                Layout.leftMargin: 10 + Appearance.rounding.screenRounding
                 Layout.rightMargin: Appearance.rounding.screenRounding
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -179,10 +160,6 @@ Item { // Bar content region
                     Layout.alignment: Qt.AlignVCenter
                 }
 
-                BatteryIndicator {
-                    visible: (root.useShortenedForm < 2 && Battery.available)
-                    Layout.alignment: Qt.AlignVCenter
-                }
             }
         }
     }
@@ -284,6 +261,32 @@ Item { // Bar content region
                             color: rightSidebarButton.colText
                         }
                     }
+                    Revealer {
+                        reveal: Privacy.micActive
+                        Layout.fillHeight: true
+                        Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
+                        Behavior on Layout.rightMargin {
+                            animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                        }
+                        MaterialSymbol {
+                            text: "mic"
+                            iconSize: Appearance.font.pixelSize.larger
+                            color: "#f28b82"
+                        }
+                    }
+                    Revealer {
+                        reveal: Privacy.screenSharing
+                        Layout.fillHeight: true
+                        Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
+                        Behavior on Layout.rightMargin {
+                            animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                        }
+                        MaterialSymbol {
+                            text: "screen_share"
+                            iconSize: Appearance.font.pixelSize.larger
+                            color: "#f28b82"
+                        }
+                    }
                     HyprlandXkbIndicator {
                         Layout.alignment: Qt.AlignVCenter
                         Layout.rightMargin: indicatorsRowLayout.realSpacing
@@ -307,13 +310,7 @@ Item { // Bar content region
                         iconSize: Appearance.font.pixelSize.larger
                         color: rightSidebarButton.colText
                     }
-                    MaterialSymbol {
-                        Layout.leftMargin: indicatorsRowLayout.realSpacing
-                        visible: BluetoothStatus.available
-                        text: BluetoothStatus.connected ? "bluetooth_connected" : BluetoothStatus.enabled ? "bluetooth" : "bluetooth_disabled"
-                        iconSize: Appearance.font.pixelSize.larger
-                        color: rightSidebarButton.colText
-                    }
+
                 }
             }
 

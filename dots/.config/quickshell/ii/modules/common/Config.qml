@@ -78,30 +78,10 @@ Singleton {
         JsonAdapter {
             id: configOptionsJsonAdapter
 
-            property string panelFamily: "ii" // "ii", "waffle"
+            property string panelFamily: "ii"
 
             property JsonObject policies: JsonObject {
-                property int ai: 1 // 0: No | 1: Yes | 2: Local
                 property int weeb: 1 // 0: No | 1: Open | 2: Closet
-            }
-
-            property JsonObject ai: JsonObject {
-                property string systemPrompt: "## Style\n- Use casual tone, don't be formal!\n- Always be brief and to the point, unless asked otherwise\n- Don't repeat the user's question\n- Be approachable: Avoid using overly complicated, domain-specific terms and provide analogies when asked to explain a concept\n\n## Context (ignore when irrelevant)\n- You are a helpful and inspiring sidebar assistant on a {DISTRO} Linux system\n- Desktop environment: {DE}\n- Current date & time: {DATETIME}\n- Focused app: {WINDOWCLASS}\n\n## Presentation\n- Use Markdown features in your response: \n  - **Bold** text to **highlight keywords** in your response\n  - **Split long information into small sections** with h2 headers and a relevant emoji at the start of it (for example `## 🐧 Linux`). Bullet points are preferred over long paragraphs, unless you're offering writing support or instructed otherwise by the user.\n- Asked to compare different options? You should firstly use a table to compare the main aspects, then elaborate or include relevant comments from online forums *after* the table. Make sure to provide a final recommendation for the user's use case!\n- Use LaTeX formatting for mathematical and scientific notations whenever appropriate. Enclose all LaTeX '$$' delimiters. NEVER generate LaTeX code in a latex block unless the user explicitly asks for it. DO NOT use LaTeX for regular documents (resumes, letters, essays, CVs, etc.).\n\nThanks!\n"
-                property string tool: "functions" // search, functions, or none
-                property list<var> extraModels: [
-                    {
-                        "api_format": "openai", // Most of the time you want "openai". Use "gemini" for Google's models
-                        "description": "This is a custom model. Edit the config to add more! | Anyway, this is DeepSeek R1 Distill LLaMA 70B",
-                        "endpoint": "https://openrouter.ai/api/v1/chat/completions",
-                        "homepage": "https://openrouter.ai/deepseek/deepseek-r1-distill-llama-70b:free", // Not mandatory
-                        "icon": "spark-symbolic", // Not mandatory
-                        "key_get_link": "https://openrouter.ai/settings/keys", // Not mandatory
-                        "key_id": "openrouter",
-                        "model": "deepseek/deepseek-r1-distill-llama-70b:free",
-                        "name": "Custom: DS R1 Dstl. LLaMA 70B",
-                        "requires_key": true
-                    }
-                ]
             }
 
             property JsonObject appearance: JsonObject {
@@ -141,23 +121,15 @@ Singleton {
 
             property JsonObject audio: JsonObject {
                 // Values in %
-                property JsonObject protection: JsonObject {
-                    // Prevent sudden bangs
-                    property bool enable: false
-                    property real maxAllowedIncrease: 10
-                    property real maxAllowed: 99
-                }
             }
 
             property JsonObject apps: JsonObject {
-                property string bluetooth: "kcmshell6 kcm_bluetooth"
-                property string changePassword: "kitty -1 --hold=yes fish -i -c 'passwd'"
-                property string network: "kcmshell6 kcm_networkmanagement"
-                property string manageUser: "kcmshell6 kcm_users"
-                property string networkEthernet: "kcmshell6 kcm_networkmanagement"
-                property string taskManager: "plasma-systemmonitor --page-name Processes"
-                property string terminal: "kitty -1" // This is only for shell actions
-                property string update: "kitty -1 --hold=yes fish -i -c 'pkexec pacman -Syu'"
+                property string changePassword: "ghostty --hold=yes fish -i -c 'passwd'"
+                property string manageUser: "ghostty fish -i -c 'sudo systemctl start user-manager'"
+                property string network: "ghostty fish -i -c 'nmtui'"
+                property string taskManager: "ghostty htop"
+                property string terminal: "ghostty" // This is only for shell actions
+                property string update: "ghostty --hold=yes fish -i -c 'pkexec pacman -Syu'"
                 property string volumeMixer: `~/.config/hypr/hyprland/scripts/launch_first_available.sh "pavucontrol-qt" "pavucontrol"`
             }
 
@@ -172,7 +144,6 @@ Singleton {
                         property string style: "cookie"        // Options: "cookie", "digital"
                         property string styleLocked: "cookie"  // Options: "cookie", "digital"
                         property JsonObject cookie: JsonObject {
-                            property bool aiStyling: false
                             property int sides: 14
                             property string dialNumberStyle: "full"   // Options: "dots" , "numbers", "full" , "none"
                             property string hourHandStyle: "fill"     // Options: "classic", "fill", "hollow", "hide"
@@ -256,7 +227,6 @@ Singleton {
                     property bool showKeyboardToggle: true
                     property bool showDarkModeToggle: true
                     property bool showPerformanceProfileToggle: false
-                    property bool showScreenRecord: false
                 }
                 property JsonObject workspaces: JsonObject {
                     property bool monochromeIcons: true
@@ -284,14 +254,6 @@ Singleton {
                 }
             }
 
-            property JsonObject battery: JsonObject {
-                property int low: 20
-                property int critical: 5
-                property int full: 101
-                property bool automaticSuspend: true
-                property int suspend: 3
-            }
-
             property JsonObject calendar: JsonObject {
                 property string locale: "en-GB"
             }
@@ -314,7 +276,6 @@ Singleton {
 
             property JsonObject conflictKiller: JsonObject {
                 property bool autoKillNotificationDaemons: false
-                property bool autoKillTrays: false
             }
 
             property JsonObject crosshair: JsonObject {
@@ -330,7 +291,7 @@ Singleton {
                 property bool pinnedOnStartup: false
                 property bool hoverToReveal: true // When false, only reveals on empty workspace
                 property list<string> pinnedApps: [ // IDs of pinned entries
-                    "org.kde.dolphin", "kitty",]
+                    "org.kde.dolphin",]
                 property list<string> ignoredAppRegexes: []
             }
 
@@ -348,15 +309,10 @@ Singleton {
 
             property JsonObject language: JsonObject {
                 property string ui: "auto" // UI language. "auto" for system locale, or specific language code like "zh_CN", "en_US"
-                property JsonObject translator: JsonObject {
-                    property string engine: "auto" // Run `trans -list-engines` for available engines. auto should use google
-                    property string targetLanguage: "auto" // Run `trans -list-all` for available languages
-                    property string sourceLanguage: "auto"
-                }
             }
 
             property JsonObject launcher: JsonObject {
-                property list<string> pinnedApps: [ "org.kde.dolphin", "kitty", "cmake-gui"]
+                property list<string> pinnedApps: [ "org.kde.dolphin", "cmake-gui"]
             }
 
             property JsonObject light: JsonObject {
@@ -366,30 +322,9 @@ Singleton {
                     property string to: "06:30"   // Format: "HH:mm", 24-hour time
                     property int colorTemperature: 5000
                 }
-                property JsonObject antiFlashbang: JsonObject {
-                    property bool enable: false
-                }
-            }
-
-            property JsonObject lock: JsonObject {
-                property bool useHyprlock: false
-                property bool launchOnStartup: false
-                property JsonObject blur: JsonObject {
-                    property bool enable: true
-                    property real radius: 100
-                    property real extraZoom: 1.1
-                }
-                property bool centerClock: true
-                property bool showLockedText: true
-                property JsonObject security: JsonObject {
-                    property bool unlockKeyring: true
-                    property bool requirePasswordToPower: false
-                }
-                property bool materialShapeChars: true
             }
 
             property JsonObject media: JsonObject {
-                // Attempt to remove dupes (the aggregator playerctl one and browsers' native ones when there's plasma browser integration)
                 property bool filterDuplicatePlayers: true
             }
 
@@ -414,15 +349,6 @@ Singleton {
                 property bool pinnedOnStartup: false
             }
 
-            property JsonObject overlay: JsonObject {
-                property bool openingZoomAnimation: true
-                property bool darkenScreen: true
-                property real clickthroughOpacity: 0.8
-                property JsonObject floatingImage: JsonObject {
-                    property string imageSource: "https://media.tenor.com/H5U5bJzj3oAAAAAi/kukuru.gif"
-                    property real scale: 0.5
-                }
-            }
 
             property JsonObject overview: JsonObject {
                 property bool enable: true
@@ -451,9 +377,6 @@ Singleton {
                     property int strokeWidth: 6
                     property int padding: 10
                 }
-                property JsonObject annotation: JsonObject {
-                    property bool useSatty: false
-                }
             }
 
             property JsonObject resources: JsonObject {
@@ -467,11 +390,6 @@ Singleton {
                 property bool invertPinnedItems: true // Makes the below a whitelist for the tray and blacklist for the pinned area
                 property list<var> pinnedItems: [ "Fcitx" ]
                 property bool filterPassive: true
-            }
-
-            property JsonObject musicRecognition: JsonObject {
-                property int timeout: 16
-                property int interval: 4
             }
 
             property JsonObject search: JsonObject {
@@ -497,21 +415,7 @@ Singleton {
 
             property JsonObject sidebar: JsonObject {
                 property bool keepRightSidebarLoaded: true
-                property JsonObject translator: JsonObject {
-                    property bool enable: false
-                    property int delay: 300 // Delay before sending request. Reduces (potential) rate limits and lag.
-                }
-                property JsonObject ai: JsonObject {
-                    property bool textFadeIn: false
-                }
-                property JsonObject booru: JsonObject {
-                    property bool allowNsfw: false
-                    property string defaultProvider: "yandere"
-                    property int limit: 20
-                    property JsonObject zerochan: JsonObject {
-                        property string username: "[unset]"
-                    }
-                }
+
                 property JsonObject cornerOpen: JsonObject {
                     property bool enable: true
                     property bool bottom: false
@@ -530,11 +434,8 @@ Singleton {
                         property int columns: 5
                         property list<var> toggles: [
                             { "size": 2, "type": "network" },
-                            { "size": 2, "type": "bluetooth"  },
-                            { "size": 1, "type": "idleInhibitor" },
                             { "size": 1, "type": "mic" },
                             { "size": 2, "type": "audio" },
-                            { "size": 2, "type": "nightLight" }
                         ]
                     }
                 }
@@ -547,16 +448,11 @@ Singleton {
                 }
             }
 
-            property JsonObject screenRecord: JsonObject {
-                property string savePath: Directories.videos.replace("file://","") // strip "file://"
-            }
-
             property JsonObject screenSnip: JsonObject {
                 property string savePath: "" // only copy to clipboard when empty
             }
 
             property JsonObject sounds: JsonObject {
-                property bool battery: false
                 property bool pomodoro: false
                 property string theme: "freedesktop"
             }
@@ -576,12 +472,6 @@ Singleton {
                 property bool secondPrecision: false
             }
 
-            property JsonObject updates: JsonObject {
-                property bool enableCheck: true
-                property int checkInterval: 120 // minutes
-                property int adviseUpdateThreshold: 75 // packages
-                property int stronglyAdviseUpdateThreshold: 200 // packages
-            }
             
             property JsonObject wallpaperSelector: JsonObject {
                 property bool useSystemFileDialog: false
@@ -596,38 +486,12 @@ Singleton {
                 property int arbitraryRaceConditionDelay: 20 // milliseconds
             }
 
-            property JsonObject workSafety: JsonObject {
-                property JsonObject enable: JsonObject {
-                    property bool wallpaper: false
-                    property bool clipboard: false
-                }
-                property JsonObject triggerCondition: JsonObject {
-                    property list<string> networkNameKeywords: ["airport", "cafe", "college", "company", "eduroam", "free", "guest", "public", "school", "university"]
-                    property list<string> fileKeywords: ["anime", "booru", "ecchi", "hentai", "yande.re", "konachan", "breast", "nipples", "pussy", "nsfw", "spoiler", "girl"]
-                    property list<string> linkKeywords: ["hentai", "porn", "sukebei", "hitomi.la", "rule34", "gelbooru", "fanbox", "dlsite"]
-                }
+            property JsonObject gamemode: JsonObject {
+                property bool enable: true
+                property list<string> games: []
             }
 
-            property JsonObject waffles: JsonObject {
-                // Some spots are kinda janky/awkward. Setting the following to
-                // false will make (some) stuff also be like that for accuracy. 
-                // Example: the right-click menu of the Start button
-                property JsonObject tweaks: JsonObject {
-                    property bool switchHandlePositionFix: true
-                    property bool smootherMenuAnimations: true
-                    property bool smootherSearchBar: true
-                }
-                property JsonObject bar: JsonObject {
-                    property bool bottom: true
-                    property bool leftAlignApps: false
-                }
-                property JsonObject actionCenter: JsonObject {
-                    property list<string> toggles: [ "network", "bluetooth", "easyEffects", "powerProfile", "idleInhibitor", "nightLight", "darkMode", "antiFlashbang", "cloudflareWarp", "mic", "musicRecognition", "notifications", "onScreenKeyboard", "gameMode", "screenSnip", "colorPicker" ]
-                }
-                property JsonObject calendar: JsonObject {
-                    property bool force2CharDayOfWeek: true
-                }
-            }
+
         }
     }
 }

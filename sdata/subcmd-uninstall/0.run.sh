@@ -107,7 +107,7 @@ function deletion_prompt(){
 deletion_prompt "${INSTALLED_LISTFILE}"
 
 empty_dir_listfile=$(mktemp)
-scan_paths=(${XDG_CONFIG_HOME} "${XDG_DATA_HOME}"/konsole)
+scan_paths=(${XDG_CONFIG_HOME})
 for dir in "${scan_paths[@]}"; do
   find "$dir" -type d -empty -print >> $empty_dir_listfile
 done
@@ -139,6 +139,31 @@ if test -f sdata/dist-$OS_GROUP_ID/uninstall-deps.sh; then
 else
   printf "${STY_YELLOW}Automatic depedencies uninstallation is not yet avaible for your distro. Skipping...${STY_RST}\n"
 fi
+
+##############################################################################################################################
+
+printf "${STY_CYAN}Custom config cleanup...\n${STY_RST}"
+printf "${STY_YELLOW}Do you also want to delete custom config files?${STY_RST}\n"
+printf "This will remove:\n"
+printf "  - ~/.config/hypr/custom/ (keybinds, monitors, variables, scripts)\n"
+printf "Choose:\ny=Yes, delete custom files\nn=No, keep them (default)\n"
+read -n1 -p "> " custom_choice < /dev/tty
+echo
+case "$custom_choice" in
+  y|Y)
+    printf "${STY_RED}Deleting custom configs...${STY_RST}\n"
+    for path in \
+      "$HOME/.config/hypr/custom"; do
+      if [[ -e "$path" ]]; then
+        x rm -rf -- "$path"
+        printf "  Deleted: $path\n"
+      fi
+    done
+    ;;
+  *)
+    printf "${STY_BLUE}Skipping custom files.\n${STY_RST}"
+    ;;
+esac
 
 printf "${STY_CYAN}Uninstall script finished.\n${STY_RST}"
 printf "${STY_CYAN}Hint: If you had agreed to backup when you ran \"./setup install\", you should be able to find it under \"$BACKUP_DIR\".\n${STY_RST}"
