@@ -185,13 +185,6 @@ for i = 1, 10 do
         hl.dispatch(hl.dsp.window.move({ workspace = workspace_in_group(i), follow = false }))
     end, { description = "Window: Send to workspace " .. i })
 end
---# We also use raw keycodes because some keyboard layouts register number keys as different chars. The codes can be verified with `wev`
--- for i = 1, 10 do
---     local numberkey = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 }
---     hl.bind("SUPER + ALT + code:" .. numberkey[i], function()
---         hl.dispatch(hl.dsp.window.move({ workspace = workspace_in_group(i), follow = false }))
---     end)
--- end
 --# keypad numbers
 for i = 1, 10 do
     local numpadkey = { 87, 88, 89, 83, 84, 85, 79, 80, 81, 90 }
@@ -303,15 +296,10 @@ end)
 
 
 --#!
---# Testing
-
-
 --##! Session
 hl.bind("SUPER + L", hl.dsp.exec_cmd("loginctl lock-session"), { description = "Session: Lock" })
 hl.bind("SUPER + SHIFT + L", hl.dsp.exec_cmd("systemctl suspend || loginctl suspend"),
-    { locked = true, description = "Session: Sleep" }) -- Sleep
--- hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("systemctl suspend || loginctl suspend"), {locked = true} ) -- # [hidden] Suspend when laptop lid is closed, uncomment if for whatever reason it's not the default behavior
-
+    { locked = true, description = "Session: Sleep" })
 hl.bind("CTRL + SHIFT + ALT + SUPER + Delete", hl.dsp.exec_cmd("systemctl poweroff || loginctl poweroff"),
     { description = "Session: Shut down" }) -- # [hidden] Power off
 
@@ -328,6 +316,3 @@ hl.bind("SUPER + X", hl.dsp.exec_cmd(textEditor), { description = "App: Text edi
 hl.bind("CTRL + SUPER + V", hl.dsp.exec_cmd(volumeMixer), { description = "App: Volume mixer" })
 hl.bind("SUPER + I", hl.dsp.exec_cmd(settingsApp), { description = "App: Settings app" })
 hl.bind("CTRL + SHIFT + Escape", hl.dsp.exec_cmd(taskManager), { description = "App: Task manager" })
-
---# Cursed stuff
-

@@ -5,9 +5,8 @@
 hl.env("qsConfig", "ii")
 
 -- Apps
--- PULL REQUESTS ADDING MORE WILL NOT BE ACCEPTED, CONFIG FOR YOURSELF
 terminal = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'ghostty' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm'"
-fileManager = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'dolphin' 'nautilus' 'nemo' 'thunar' 'ghostty -e fish -c yazi' 'kitty -1 fish -c yazi'"
+fileManager = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'nautilus' 'dolphin' 'nemo' 'thunar' 'ghostty -e fish -c yazi' 'kitty -1 fish -c yazi'"
 browser = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'google-chrome-stable' 'zen-browser' 'firefox' 'brave' 'chromium' 'microsoft-edge-stable' 'opera' 'librewolf'"
 codeEditor = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'windsurf' 'antigravity' 'code' 'codium' 'cursor' 'zed' 'zedit' 'zeditor' 'kate' 'gnome-text-editor' 'emacs' 'command -v nvim && ghostty -e nvim' 'command -v micro && ghostty -e micro' 'command -v nvim && kitty -1 nvim' 'command -v micro && kitty -1 micro'"
 officeSoftware = "~/.config/hypr/hyprland/scripts/launch_first_available.sh 'wps' 'onlyoffice-desktopeditors' 'libreoffice'"

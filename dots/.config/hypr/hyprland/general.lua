@@ -70,7 +70,6 @@ hl.config({
     },
     decoration = {
         -- 2 = circle, higher = squircle, 4 = very obvious squircle
-        -- Fuck clearly visible squircles. 100% Apple brainrot.
         rounding_power = 2.5,
         rounding = 18,
 
@@ -111,7 +110,6 @@ hl.config({
         preserve_split = true,
         smart_split = false,
         smart_resizing = false
-        -- precise_mouse_move = true,
     },
 })
 -- Curves

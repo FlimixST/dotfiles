@@ -1,0 +1,28 @@
+groups=(illogical-impulse)
+pkgname=personal-apps
+pkgver=1.0
+pkgrel=1
+pkgdesc='Personal apps'
+arch=(any)
+license=(None)
+depends=(
+  firefox
+  code
+  opencode
+  nodejs
+  rustup
+  docker
+  github-cli
+  steam
+  gamemode
+  gamescope
+  qbittorrent
+  opentabletdriver
+  tabby-bin
+  throne-bin
+  timeswitch
+  pear-desktop
+  filelight
+  vesktop-bin
+  materialgram-bin
+)

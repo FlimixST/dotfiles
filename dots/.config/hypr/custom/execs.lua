@@ -1,4 +1,7 @@
--- Game mode switcher
 hl.on("hyprland.start", function ()
     hl.exec_cmd("python3 ~/.config/hypr/custom/scripts/game_script.py")
+    hl.exec_cmd("vesktop")
+    hl.exec_cmd("materialgram")
+    hl.exec_cmd("systemctl --user start opentabletdriver.service || otd-daemon")
+    hl.exec_cmd("pactl set-card-profile alsa_card.usb-ME6_8888_721_MS_ME6S-00 input:mono-fallback 2>/dev/null; pactl set-card-profile alsa_card.usb-Logitech_G_series_G435_Wireless_Gaming_Headset_202105190004-00 output:analog-stereo 2>/dev/null; amixer sset Master 100% unmute; wpctl set-volume @DEFAULT_AUDIO_SINK@ 1.0; wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 1.0 2>/dev/null; amixer sset Capture 100% cap 2>/dev/null || true")
 end)

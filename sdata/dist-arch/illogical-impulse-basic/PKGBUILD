@@ -15,7 +15,7 @@ depends=(
   ripgrep
   jq
   xdg-user-dirs
-  dolphin
+  nautilus
   ghostty
   # Used in install script
   rsync

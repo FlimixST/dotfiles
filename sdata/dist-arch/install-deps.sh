@@ -95,6 +95,8 @@ metapkgs+=(./sdata/dist-arch/illogical-impulse-hyprland)
 # Install official quickshell from extra repo
 v sudo pacman -S --needed --noconfirm quickshell qt6-5compat qt6-positioning kdialog
 metapkgs+=(./sdata/dist-arch/illogical-impulse-bibata-modern-classic-bin)
+# Personal apps
+metapkgs+=(./sdata/dist-arch/personal-apps)
 
 for i in "${metapkgs[@]}"; do
   metainstallflags="--needed"

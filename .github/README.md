@@ -40,6 +40,17 @@ I deleted:
 
 ---
 
+### Hardware
+
+- **CPU:** Intel Core i5-9600KF @ 3.70GHz (6 cores)
+- **RAM:** 24 GB
+- **GPU:** NVIDIA GeForce GTX 1060 6GB (GP106, Pascal)
+- **Driver:** nvidia-580xx
+- **OS:** CachyOS, linux-cachyos
+- **Monitors:** AOC 24G1WG4 @ 144Hz (DP-1), Samsung S24B300 (DVI-D-1)
+
+---
+
 ### Installation
 
 ```bash
